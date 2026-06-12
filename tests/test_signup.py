@@ -19,3 +19,16 @@ def test_student_cannot_sign_up_twice_for_same_activity():
 
     assert second_response.status_code == 400
     assert second_response.json() == {"detail": "Student is already signed up"}
+
+
+def test_student_can_unregister_from_activity():
+    activity_name = "Chess Club"
+    email = "remove-test@mergington.edu"
+
+    activities[activity_name]["participants"] = [email]
+
+    response = client.delete(f"/activities/{activity_name}/unregister?email={email}")
+
+    assert response.status_code == 200
+    assert email not in activities[activity_name]["participants"]
+    assert response.json() == {"message": f"Unregistered {email} from {activity_name}"}
